@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Pink Pocket</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+<div class="logo">
+<h2>Pink Pocket</h2>
+<p>Smart Savings for Students</p>
+</div>
+</header>
+
+<section class="balance-section">
+<h3>Your Balance</h3>
+<h1 id="balance">₹3000</h1>
+<p id="budgetInfo">₹0 spent of ₹3000 budget</p>
+</section>
+
+<div class="container">
+
+<div class="left">
+
+<div class="card">
+<h3>Monthly Budget</h3>
+
+<h2>₹3000</h2>
+
+<div class="progress">
+<div id="progressBar"></div>
+</div>
+
+<p id="spentText">Spent ₹0</p>
+</div>
+
+<div class="card">
+<h3>Recent Expenses</h3>
+
+<ul id="expenseList"></ul>
+
+</div>
+
+</div>
+
+<div class="right">
+
+<div class="card">
+<h3>Spending Breakdown</h3>
+
+<div class="donut">
+<div class="donut-text">
+₹0<br>
+<span>Total Spent</span>
+</div>
+</div>
+
+</div>
+
+<div class="card insight">
+
+<h3>Smart Insights</h3>
+
+<p id="insightText">
+Start adding expenses to get insights.
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<button class="addBtn" onclick="openForm()">+</button>
+
+<div id="expenseForm" class="form-popup">
+
+<h3>Add Expense</h3>
+
+<input id="title" placeholder="Expense name">
+
+<input id="amount" type="number" placeholder="Amount">
+
+<select id="category">
+<option>Food</option>
+<option>Transport</option>
+<option>Shopping</option>
+<option>Education</option>
+<option>Entertainment</option>
+</select>
+
+<button onclick="addExpense()">Add</button>
+<button onclick="closeForm()">Cancel</button>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
