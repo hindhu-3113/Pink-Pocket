@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Pink Pocket</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+body{
+font-family:Arial;
+margin:0;
+background:linear-gradient(120deg,#ffd6e6,#f6d4b4);
+}
+
+header{
+padding:20px 40px;
+}
+
+h1{
+color:#ff4d79;
+}
+
+.balance-section{
+text-align:center;
+margin-top:20px;
+}
+
+.balance{
+font-size:50px;
+color:#ff4d79;
+}
+
+.container{
+display:flex;
+gap:20px;
+padding:30px;
+}
+
+.card{
+background:white;
+padding:20px;
+border-radius:15px;
+flex:1;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+.progress{
+height:12px;
+background:#ddd;
+border-radius:10px;
+margin-top:10px;
+}
+
+#progressBar{
+height:12px;
+width:0%;
+background:#ff4d79;
+border-radius:10px;
+}
+
+input,select{
+padding:8px;
+margin:5px;
+}
+
+button{
+padding:8px 12px;
+background:#ff4d79;
+color:white;
+border:none;
+border-radius:5px;
+cursor:pointer;
+}
+
+ul{
+list-style:none;
+padding:0;
+}
+
+li{
+padding:8px;
+border-bottom:1px solid #eee;
+display:flex;
+justify-content:space-between;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+<h1>Pink Pocket</h1>
+<p>Smart Savings for Students</p>
+</header>
+
+
+<div class="balance-section">
+
+<h2>Your Balance</h2>
+
+<div class="balance" id="balance">₹0</div>
+
+<p id="budgetText">No budget set</p>
+
+</div>
+
+
+<div class="container">
+
+<!-- LEFT SIDE -->
+
+<div class="card">
+
+<h3>Set Monthly Budget</h3>
+
+<input id="budgetInput" type="number" placeholder="Enter budget">
+
+<button onclick="setBudget()">Set Budget</button>
+
+<div class="progress">
+<div id="progressBar"></div>
+</div>
+
+<p id="spentText">Spent ₹0</p>
+
+<hr>
+
+<h3>Add Expense</h3>
+
+<input id="title" placeholder="Expense name">
+
+<input id="amount" type="number" placeholder="Amount">
+
+<select id="category">
+<option>Food</option>
+<option>Transport</option>
+<option>Shopping</option>
+<option>Education</option>
+<option>Entertainment</option>
+</select>
+
+<button onclick="addExpense()">Add</button>
+
+<hr>
+
+<h3>Recent Expenses</h3>
+
+<ul id="expenseList"></ul>
+
+</div>
+
+
+<!-- RIGHT SIDE -->
+
+<div class="card">
+
+<h3>Spending Breakdown</h3>
+
+<canvas id="chart"></canvas>
+
+</div>
+
+</div>
+
+
+<script>
+
+let budget = 0
+let expenses = JSON.parse(localStorage.getItem("expenses")) || []
+
+const ctx = document.getElementById("chart")
+
+const chart = new Chart(ctx, {
+type: 'doughnut',
+data: {
+labels: ["Food","Transport","Shopping","Education","Entertainment"],
+datasets: [{
+data:[0,0,0,0,0],
+backgroundColor:[
+"#ff6384",
+"#36a2eb",
+"#ffcd56",
+"#4bc0c0",
+"#9966ff"
+]
+}]
+}
+})
+
+
+function setBudget(){
+
+budget = parseInt(document.getElementById("budgetInput").value)
+
+updateUI()
+
+}
+
+
+function addExpense(){
+
+let title = document.getElementById("title").value
+let amount = parseInt(document.getElementById("amount").value)
+let category = document.getElementById("category").value
+
+expenses.push({title,amount,category})
+
+localStorage.setItem("expenses",JSON.stringify(expenses))
+
+updateUI()
+
+}
+
+
+function updateUI(){
+
+let totalSpent = 0
+
+let categoryTotals = {
+Food:0,
+Transport:0,
+Shopping:0,
+Education:0,
+Entertainment:0
+}
+
+let list = document.getElementById("expenseList")
+
+list.innerHTML=""
+
+expenses.forEach(e=>{
+
+totalSpent += e.amount
+
+categoryTotals[e.category] += e.amount
+
+let li = document.createElement("li")
+
+li.innerHTML = `${e.title} <span>₹${e.amount}</span>`
+
+list.appendChild(li)
+
+})
+
+
+let balance = budget - totalSpent
+
+document.getElementById("balance").innerText = "₹"+balance
+
+document.getElementById("budgetText").innerText =
+"₹"+totalSpent+" spent of ₹"+budget+" budget"
+
+document.getElementById("spentText").innerText =
+"Spent ₹"+totalSpent
+
+
+let percent = (totalSpent/budget)*100
+
+document.getElementById("progressBar").style.width = percent+"%"
+
+
+chart.data.datasets[0].data = [
+categoryTotals.Food,
+categoryTotals.Transport,
+categoryTotals.Shopping,
+categoryTotals.Education,
+categoryTotals.Entertainment
+]
+
+chart.update()
+
+}
+
+updateUI()
+
+</script>
+
+</body>
+</html>
