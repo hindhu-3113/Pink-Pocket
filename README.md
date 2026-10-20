@@ -1,2 +1,1 @@
-Pink_Pocket
-Simple Project
+Pink-Pocket
